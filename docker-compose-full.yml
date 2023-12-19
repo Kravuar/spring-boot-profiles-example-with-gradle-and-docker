@@ -1,0 +1,32 @@
+version: '3'
+services:
+  info-app:
+    build:
+      context: .
+      dockerfile: Prod.Dockerfile
+      args:
+        SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/info-db
+        SPRING_DATASOURCE_USERNAME: root
+        SPRING_DATASOURCE_PASSWORD: infodbpass
+    ports:
+      - "8080" # Accessible from outside (no external port assigned yet)
+    networks:
+      - app-db-network
+
+  mysql:
+    image: mysql:latest
+    environment:
+      MYSQL_ROOT_PASSWORD: infodbpass
+      MYSQL_DATABASE: info-db
+    volumes:
+      - db:/var/lib/mysql
+    expose:
+      - 3306
+    networks:
+      - app-db-network
+
+volumes:
+  db:
+
+networks:
+  app-db-network:
